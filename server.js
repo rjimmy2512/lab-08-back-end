@@ -12,26 +12,6 @@ const PORT = process.env.PORT;
 const app = express(); //convention, just so that it looks better
 app.use(cors());
 
-//route syntax = app.<operation>('<route>', callback);
-app.get('/', (request, response) => {
-  response.send('Home page');
-});
-
-app.get('/bad', (request, response) => {
-  throw new Error('bummer');
-});
-
-app.get('/about', aboutUsHandler);
-
-// app.get('*', (request, response) => {
-//   response.status(404).send('This page does not exist');
-// });
-
-function aboutUsHandler (request, response) {
-  response.status(200).send('This is the About us page');
-}
-
-
 //API routes
 app.get('/location', (request, response) => {
   try {
@@ -46,6 +26,19 @@ app.get('/location', (request, response) => {
   }
 });
 
+app.get('/weather', (request, response) => {
+  try {
+    const weatherData = require('./data/blacksky.json');
+    const forecastData = getWeather(weatherData);
+    response.send(forecastData);
+  }
+  catch(error) {
+    //some function or error message
+    errorHandler('Sorry, something went wrong', request, response);
+  }
+});
+
+
 //Helper functions
 function Location(city, geoData) {
   this.search_query = city;
@@ -54,9 +47,29 @@ function Location(city, geoData) {
   this.longitude = geoData.results[0].geometry.location.lng;
 }
 
+function Weather(forecast, time) {
+  this.forecast = forecast;
+  this.time = timeConverter(time);
+}
+
+function getWeather(weatherData) {
+  let result = [];
+  weatherData.daily.data.forEach(element => {
+    result.push (new Weather (element.summary, element.time));
+  });
+  return result;
+}
+
 function errorHandler (error, request, response) {
   response.status(500).send(error);
 }
+
+function timeConverter(unixTimeStamp) {
+  let dateObj = new Date(unixTimeStamp * 1000);
+  let utcString = dateObj.toUTCString();
+  return utcString.slice(0, 16);
+}
+
 
 //Ensure that the server is listening for requests
 //THIS MUST BE AT THE BOTTOM OF THE FILE
