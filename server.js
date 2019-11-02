@@ -33,7 +33,6 @@ app.get('/weather', (request, response) => {
     response.send(forecastData);
   }
   catch(error) {
-    //some function or error message
     errorHandler('Sorry, something went wrong', request, response);
   }
 });
@@ -54,9 +53,8 @@ function Weather(forecast, time) {
 
 function getWeather(weatherData) {
   let result = [];
-  weatherData.daily.data.forEach(element => {
-    result.push (new Weather (element.summary, element.time));
-  });
+  weatherData.daily.data.forEach(element =>
+    result.push (new Weather (element.summary, element.time)));
   return result;
 }
 
@@ -67,7 +65,8 @@ function errorHandler (error, request, response) {
 function timeConverter(unixTimeStamp) {
   let dateObj = new Date(unixTimeStamp * 1000);
   let utcString = dateObj.toUTCString();
-  return utcString.slice(0, 16);
+  let date = utcString.slice(0, 3) + utcString.slice(4, 16);
+  return date;
 }
 
 
