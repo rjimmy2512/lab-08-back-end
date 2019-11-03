@@ -13,6 +13,10 @@ const app = express(); //convention, just so that it looks better
 app.use(cors());
 
 //API routes
+app.get('/', (request, response) => {
+  response.send(`This is a back-end application that's meant to be used with city explorer front-end`);
+});
+
 app.get('/location', (request, response) => {
   try {
     const geoData = require('./data/geo.json');
@@ -28,13 +32,17 @@ app.get('/location', (request, response) => {
 
 app.get('/weather', (request, response) => {
   try {
-    const weatherData = require('./data/blacksky.json');
+    const weatherData = require('./data/darksky.json');
     const forecastData = getWeather(weatherData);
     response.send(forecastData);
   }
   catch(error) {
     errorHandler('Sorry, something went wrong', request, response);
   }
+});
+
+app.get('*', (request, response) => {
+  response.status(404).send('No such page');
 });
 
 
@@ -52,7 +60,7 @@ function Weather(forecast, time) {
 }
 
 function getWeather(weatherData) {
-  let result = [];
+  const result = [];
   weatherData.daily.data.forEach(element =>
     result.push (new Weather (element.summary, element.time)));
   return result;
