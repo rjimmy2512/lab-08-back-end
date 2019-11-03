@@ -1,6 +1,7 @@
 # City Explorer Backend
 
 **Author**: Leo Kuhorev and Noah Rhodes
+
 **Version**: 0.1
 
 ## Overview
