@@ -7,6 +7,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
+const pg = require('pg');
 
 //Application setup
 const PORT = process.env.PORT;
@@ -14,9 +15,9 @@ const app = express(); //convention, just so that it looks better
 app.use(cors());
 
 //Begin API routes
-app.get('/location',getLocation);
-app.get('/weather',getWeather);
-app.get('/trails',getTrails);
+app.get('/location', getLocation);
+app.get('/weather', getWeather);
+app.get('/trails', getTrails);
 
 //404 if the above api routes are not called
 app.get('*', (request, response) => {

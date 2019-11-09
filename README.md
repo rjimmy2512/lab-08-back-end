@@ -1,25 +1,27 @@
 # City Explorer Backend
 
-**Author**: Leo Kuhorev, Noah Rhodes, Diana Kim
+**Author**: Leo Kuhorev, Noah Rhodes, Diana Kim, Valerie Sobol
 
-**Version**: 0.1
+**Version**: 0.3
 
 ## Overview
 The goal of this project is to build out the backend to a frontend application called City Explorer. 
 
 ## Getting Started
-Get the frontend of City Explorer, load it up using live-server or equivilent, and point your endpoints to http://cf301-city-explorer.herokuapp.com/.
+Get the frontend of City Explorer, load it up using live-server or equivilent, and point your endpoints to https://cityexplorer8.herokuapp.com.
 
 ## Architecture
 This backend has been develeoped using Javascript with the following dependencies, on the node.js framework:
 "cors": "^2.8.5",
 "dotenv": "^8.2.0",
 "express": "^4.17.1"
+"pg": "^7.12.1",
+"superagent": "^5.1.0"
 
-It has been deployed to https://seattle-301n15-lab-07.herokuapp.com/.
+It has been deployed to https://cityexplorer8.herokuapp.com/.
 
 ## Change Log
-11-08-2019 810 PM - Applicaion successfully makes requests to the trails API, sends back to the frontend.
+11-08-2019 810 PM - Application successfully makes requests to the trails API, sends back to the frontend.
 11-08-2019 630 PM - Application successfully makes requests of data to the geocoding API, weather API, sends back to the frontend.
 11-03-2019 855 pm - Application sends location and weather data back to the frontend.
 
