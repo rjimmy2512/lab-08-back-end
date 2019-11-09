@@ -1,24 +1,29 @@
 'use strict';
 
-//load Environment variables from the .env
+// Environment variables
 require('dotenv').config();
 
-//declare Application Dependencies
+// Application Dependencies
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
+const pg = require('pg');
 
-//Application setup
+// Application setup
 const PORT = process.env.PORT;
 const app = express(); //convention, just so that it looks better
 app.use(cors());
 
-//Begin API routes
-app.get('/location',getLocation);
-app.get('/weather',getWeather);
-app.get('/trails',getTrails);
+// Database Connection Setup
+const client = new pg.Client(process.env.DATABASE_URL);
+client.on('error', err => {throw err;});
 
-//404 if the above api routes are not called
+// API routes
+app.get('/location', getLocation);
+app.get('/weather', getWeather);
+app.get('/trails', getTrails);
+
+// 404 if the above api routes are not called
 app.get('*', (request, response) => {
   response.status(404).send('No such page');
 });
