@@ -16,26 +16,36 @@ app.use(cors());
 
 //Database setup
 const client = new pg.Client(process.env.DATABASE_URL);
-// function trytoWrite() {
-//   let SQL = `INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES(1,2,3,4)`;
-//   client.query(SQL);
-// }
-// trytoWrite();
-
-function trytoRead() {
-  let SQL = `SELECT * FROM locations`;
-  client.query(SQL)
-    .then(result => {
-      console.log(result.rows);
-      return result.rows;
-    });
-}
-trytoRead();
 
 //Begin API routes
 app.get('/location',getLocation);
 app.get('/weather',getWeather);
 app.get('/trails',getTrails);
+
+// app.get('/add', (request,response)=>{
+//   let firstName = request.query.first;
+//   let lastName = request.query.last;
+//   let SQL = 'INSERT INTO people (first_name, last_name) VALUES($1,$2) RETURNING *';
+//   let safeValues = [firstName,lastName];
+//   client.query(SQL,safeValues)
+//     .then( result => {
+//       response.status(200).send(result);
+//     })
+//     .catch(() => {
+//       errorHandler('Something went wrong',request,response);
+//     });
+// });
+
+// app.get('/',(request,response) => {
+//   let SQL = 'SELECT * FROM people';
+//   client.query(SQL)
+//     .then(result => {
+//       let resultArr = result.json(result.rows);
+//     })
+//     .catch(()=>{
+//       errorHandler('Something went wrong',request,response);
+//     });
+// });
 
 //404 if the above api routes are not called
 app.get('*', (request, response) => {
@@ -43,27 +53,41 @@ app.get('*', (request, response) => {
 });
 
 function getLocation(request, response) {
-  try{
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
-    superagent.get(url)
-      .then( data => {
-        const geoData = data.body;
-        const location = (new Location(request.query.data, geoData));
-        console.log(location);
-        response.status(200).send(location);
-      });
-  }
-  catch(error){
+  return console.log('get location');
+//  try{
+//     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+//     let SQL = `SELECT * FROM locations WHERE city = ${request.query.data}`;
+//     console.log('please work');
+//     let queryResult = client.query(SQL)
+//       .then(result => {
+//           return result.json(result.rows);
+//         })
+// //        .catch(()=>{return '';});
+//       // if(queryResult[0].city === request.query.data){
+//       //     response.status(200).send(queryResult);
+//       //   } else {
+//           superagent.get(url)
+//           .then( data => {
+//         const geoData = data.body;
+//         const location = (new Location(request.query.data, geoData));
+//         // let safeLocation = [location.city,location.formatted_query,location.latitude,location.longitude];
+//         // SQL = 'INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES($1,$2,$3,$4)';
+//         // client.query(SQL,safeLocation);
+//         response.status(200).send(location);
+//       });
+    //}
+//  }
+//  catch(error){
     //some function or error message
-    errorHandler('So sorry, something went wrong', request, response);
-  }
+//    errorHandler('So sorry, something went wrong', request, response);
+//  }
 }
 
 function getWeather(request, response){
-  console.log('weather works');
   const url = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${request.query.data.latitude},${request.query.data.longitude}`;
   superagent.get(url)
     .then( data => {
+      console.log(data);
       const weatherSummaries = data.body.daily.data.map(day => {
         return new Weather(day);
       });
@@ -78,6 +102,7 @@ function getTrails(request, response){
   const url = `https://www.hikingproject.com/data/get-trails?lat=${request.query.data.latitude}&lon=${request.query.data.longitude}&key=${process.env.TRAIL_API_KEY}`;
   superagent.get(url)
     .then(dataset =>{
+      console.log(dataset);
       const trailsData = dataset.body.trails.map(trails =>{
         return new Trail(trails);
       });
@@ -121,9 +146,6 @@ function errorHandler (error, request, response) {
 
 //Ensure that the server is listening for requests
 //THIS MUST BE AT THE BOTTOM OF THE FILE
-
-
-//app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
 client.connect()
   .then(()=>{
     app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
