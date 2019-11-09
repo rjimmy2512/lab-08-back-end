@@ -1,6 +1,6 @@
 'use strict';
 
-//load Environment veriable from the .env
+//load Environment variables from the .env
 require('dotenv').config();
 
 //declare Application Dependencies
@@ -30,10 +30,9 @@ function getLocation(request, response) {
         const geoData = data.body;
         const location = (new Location(request.query.data, geoData));
         response.status(200).send(location);
-      })        
+      }) 
   }
   catch(error){
-    //some function or error message
     errorHandler('So sorry, something went wrong', request, response);
   }
 }
