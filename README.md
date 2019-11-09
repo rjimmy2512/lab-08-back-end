@@ -16,9 +16,11 @@ This backend has been develeoped using Javascript with the following dependencie
 "dotenv": "^8.2.0",
 "express": "^4.17.1"
 
-It has been deployed to http://cf301-city-explorer.herokuapp.com/.
+It has been deployed to https://seattle-301n15-lab-07.herokuapp.com/.
 
 ## Change Log
+11-08-2019 810 PM - Applicaion successfully makes requests to the trails API, sends back to the frontend.
+11-08-2019 630 PM - Application successfully makes requests of data to the geocoding API, weather API, sends back to the frontend.
 11-03-2019 855 pm - Application sends location and weather data back to the frontend.
 
 
@@ -47,6 +49,12 @@ Estimate of time needed to complete: 30 min
 Start time: 3:15 PM
 Finish time: 3:40 PM
 Actual time needed to complete: 25 min
+
+Number and name of feature: Trails: *As a user, I want to request information about trails and campgrounds in the area so that users can explore the location.*
+Estimate of time needed to complete: 30 min
+Start time: 7:30 PM
+Finish time: 8:05 PM
+Actual time needed to complete: 35 min
 
 
 
