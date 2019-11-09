@@ -16,7 +16,6 @@ app.use(cors());
 //Begin API routes
 app.get('/location',getLocation);
 app.get('/weather',getWeather);
-app.get('/trails',getTrails);
 
 //404 if the above api routes are not called
 app.get('*', (request, response) => {
