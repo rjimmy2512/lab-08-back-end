@@ -14,9 +14,19 @@ const PORT = process.env.PORT;
 const app = express(); //convention, just so that it looks better
 app.use(cors());
 
-// Database Connection Setup
+//Database setup
 const client = new pg.Client(process.env.DATABASE_URL);
-client.on('error', err => {throw err;});
+
+// function trytoWrite() {
+//   let SQL = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES(1,2,3,4)`;
+//   client.query(SQL);
+// }
+// trytoWrite();
+
+//Begin API routes
+app.get('/location',getLocation);
+app.get('/weather',getWeather);
+app.get('/trails',getTrails);
 
 // API routes
 app.get('/location', getLocation);
@@ -31,12 +41,32 @@ app.get('*', (request, response) => {
 function getLocation(request, response) {
   try{
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
-    superagent.get(url)
-      .then( data => {
-        const geoData = data.body;
-        const location = (new Location(request.query.data, geoData));
-        response.status(200).send(location);
-      }) 
+    let SQL = `SELECT * FROM locations WHERE search_query = '${request.query.data}'`;
+    client.query(SQL)
+      .then(result => {
+        if(result.rows[0]){
+          response.status(200).send(result.rows[0]);
+          console.log('found it!');
+        } else{
+          superagent.get(url)
+            .then( data => {
+              console.log('did not find it');
+              const geoData = data.body;
+              const location = (new Location(request.query.data, geoData));
+              let locationsArr = [location.search_query,location.formatted_query,location.latitude,location.longitude];
+              SQL = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES($1,$2,$3,$4)`;
+              client.query(SQL,locationsArr);
+              response.status(200).send(location);
+            });
+        }
+      });
+    // superagent.get(url)
+    //   .then( data => {
+    //     const geoData = data.body;
+    //     const location = (new Location(request.query.data, geoData));
+    //     console.log('a thing');
+    //     response.status(200).send(location);
+    //   });
   }
   catch(error){
     errorHandler('So sorry, something went wrong', request, response);
@@ -44,10 +74,10 @@ function getLocation(request, response) {
 }
 
 function getWeather(request, response){
+  console.log('weather works');
   const url = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${request.query.data.latitude},${request.query.data.longitude}`;
   superagent.get(url)
     .then( data => {
-      console.log(data);
       const weatherSummaries = data.body.daily.data.map(day => {
         return new Weather(day);
       });
@@ -62,7 +92,6 @@ function getTrails(request, response){
   const url = `https://www.hikingproject.com/data/get-trails?lat=${request.query.data.latitude}&lon=${request.query.data.longitude}&key=${process.env.TRAIL_API_KEY}`;
   superagent.get(url)
     .then(dataset =>{
-      console.log(dataset);
       const trailsData = dataset.body.trails.map(trails =>{
         return new Trail(trails);
       });
@@ -106,4 +135,12 @@ function errorHandler (error, request, response) {
 
 //Ensure that the server is listening for requests
 //THIS MUST BE AT THE BOTTOM OF THE FILE
-app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
+
+//app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
+client.connect()
+  .then(()=>{
+    app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
+  })
+  .catch((error)=>{
+    console.log('The SQL server did not make it',error);
+  });
