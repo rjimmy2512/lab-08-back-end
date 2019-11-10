@@ -1,3 +1,3 @@
-DROP TABLE IF EXISTS *
+DROP TABLE IF EXISTS *;
 
-CREATE TABLE locations (city text, formatted_query text, latitude text, longitude text);
+CREATE TABLE locations (search_query text, formatted_query text, latitude text, longitude text);

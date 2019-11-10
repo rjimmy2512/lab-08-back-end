@@ -16,21 +16,12 @@ app.use(cors());
 
 //Database setup
 const client = new pg.Client(process.env.DATABASE_URL);
+
 // function trytoWrite() {
-//   let SQL = `INSERT INTO locations (city, formatted_query, latitude, longitude) VALUES(1,2,3,4)`;
+//   let SQL = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES(1,2,3,4)`;
 //   client.query(SQL);
 // }
 // trytoWrite();
-
-function trytoRead() {
-  let SQL = `SELECT * FROM locations`;
-  client.query(SQL)
-    .then(result => {
-      console.log(result.rows);
-      return result.rows;
-    });
-}
-trytoRead();
 
 //Begin API routes
 app.get('/location',getLocation);
@@ -45,13 +36,32 @@ app.get('*', (request, response) => {
 function getLocation(request, response) {
   try{
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
-    superagent.get(url)
-      .then( data => {
-        const geoData = data.body;
-        const location = (new Location(request.query.data, geoData));
-        console.log(location);
-        response.status(200).send(location);
+    let SQL = `SELECT * FROM locations WHERE search_query = '${request.query.data}'`;
+    client.query(SQL)
+      .then(result => {
+        if(result.rows[0]){
+          response.status(200).send(result.rows[0]);
+          console.log('found it!');
+        } else{
+          superagent.get(url)
+            .then( data => {
+              console.log('did not find it');
+              const geoData = data.body;
+              const location = (new Location(request.query.data, geoData));
+              let locationsArr = [location.search_query,location.formatted_query,location.latitude,location.longitude];
+              SQL = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES($1,$2,$3,$4)`;
+              client.query(SQL,locationsArr);
+              response.status(200).send(location);
+            });
+        }
       });
+    // superagent.get(url)
+    //   .then( data => {
+    //     const geoData = data.body;
+    //     const location = (new Location(request.query.data, geoData));
+    //     console.log('a thing');
+    //     response.status(200).send(location);
+    //   });
   }
   catch(error){
     //some function or error message
@@ -122,12 +132,11 @@ function errorHandler (error, request, response) {
 //Ensure that the server is listening for requests
 //THIS MUST BE AT THE BOTTOM OF THE FILE
 
-
 //app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
 client.connect()
   .then(()=>{
     app.listen(PORT, () => console.log(`The server is up listening on ${PORT}`));
   })
   .catch((error)=>{
-    console.log('The SQL server did not make it');
+    console.log('The SQL server did not make it',error);
   });
