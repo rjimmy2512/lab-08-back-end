@@ -8,9 +8,7 @@
 The goal of this project is to build out the backend to a frontend application called City Explorer. 
 
 ## Getting Started
-Go to https://dianakim.github.io/city-explorer-front/ and point your endpoints to https://cityexplorer8.herokuapp.com.
-
-https://seattle-301n15-lab-07.herokuapp.com/
+Go to https://codefellows.github.io/code-301-guide/curriculum/city-explorer-app/front-end/ and point your endpoints to https://seattle-301n15-lab-07.herokuapp.com.
 
 ## Architecture
 This backend has been develeoped using Javascript with the following dependencies, on the node.js framework:
@@ -20,7 +18,7 @@ This backend has been develeoped using Javascript with the following dependencie
 "pg": "^7.12.1",
 "superagent": "^5.1.0"
 
-It has been deployed to   /.
+It has been deployed to https://seattle-301n15-lab-07.herokuapp.com 301n15-lab-07.herokuapp.com.
 
 ## Change Log
 11-08-2019 810 PM - Application successfully makes requests to the trails API, sends back to the frontend.
