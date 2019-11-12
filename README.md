@@ -59,6 +59,12 @@ Start time: 7:30 PM
 Finish time: 8:05 PM
 Actual time needed to complete: 35 min
 
+Number and name of feature: Server: As a user, I want the application to perform quickly so that I can search for locations frequently and reliably.
+Estimate of time needed to complete: 1:30
+Start time: 1:00 PM
+Finish time: 6:00 PM
+Actual time needed to complete: 5:00
+
 
 
 ## Credits and Collaborations
