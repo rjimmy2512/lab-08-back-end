@@ -1,7 +1,7 @@
 {
-  "name": "301-lab-08",
+  "name": "lab-06-back-end",
   "version": "1.0.0",
-  "description": "City Explorer",
+  "description": "**Author**: Leo Kuhorev and Noah Rhodes",
   "main": "server.js",
   "dependencies": {
     "cors": "^2.8.5",
@@ -23,7 +23,7 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-  "url": "https://github.com/noahsadude/301-lab-07/issues"
+    "url": "https://github.com/noahsadude/301-lab-07/issues"
   },
   "homepage": "https://github.com/noahsadude/301-lab-07#readme"
 }
