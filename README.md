@@ -1,6 +1,6 @@
 # City Explorer Backend
 
-**Author**: Leo Kuhorev, Noah Rhodes, Diana Kim, Valerie Sobol
+**Author**: Leo Kuhorev, Noah Rhodes
 
 **Version**: 0.3
 
@@ -21,6 +21,7 @@ This backend has been develeoped using Javascript with the following dependencie
 It has been deployed to https://seattle-301n15-lab-07.herokuapp.com 301n15-lab-07.herokuapp.com.
 
 ## Change Log
+11-11-2019 530 PM - Application successfully queries the locations SQL table to get cached data, if it exists, before querying the geocaching API.
 11-08-2019 810 PM - Application successfully makes requests to the trails API, sends back to the frontend.
 11-08-2019 630 PM - Application successfully makes requests of data to the geocoding API, weather API, sends back to the frontend.
 11-03-2019 855 pm - Application sends location and weather data back to the frontend.
