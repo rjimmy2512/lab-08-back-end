@@ -1,15 +1,15 @@
 'use strict';
 
-// Environment variables
+//load Environment veriable from the .env
 require('dotenv').config();
 
-// Application Dependencies
+//declare Application Dependencies
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
 const pg = require('pg');
 
-// Application setup
+//Application setup
 const PORT = process.env.PORT;
 const app = express(); //convention, just so that it looks better
 app.use(cors());
@@ -17,23 +17,12 @@ app.use(cors());
 //Database setup
 const client = new pg.Client(process.env.DATABASE_URL);
 
-// function trytoWrite() {
-//   let SQL = `INSERT INTO locations (search_query, formatted_query, latitude, longitude) VALUES(1,2,3,4)`;
-//   client.query(SQL);
-// }
-// trytoWrite();
-
 //Begin API routes
 app.get('/location',getLocation);
 app.get('/weather',getWeather);
 app.get('/trails',getTrails);
 
-// API routes
-app.get('/location', getLocation);
-app.get('/weather', getWeather);
-app.get('/trails', getTrails);
-
-// 404 if the above api routes are not called
+//404 if the above api routes are not called
 app.get('*', (request, response) => {
   response.status(404).send('No such page');
 });
@@ -60,15 +49,9 @@ function getLocation(request, response) {
             });
         }
       });
-    // superagent.get(url)
-    //   .then( data => {
-    //     const geoData = data.body;
-    //     const location = (new Location(request.query.data, geoData));
-    //     console.log('a thing');
-    //     response.status(200).send(location);
-    //   });
   }
   catch(error){
+    //some function or error message
     errorHandler('So sorry, something went wrong', request, response);
   }
 }
@@ -144,3 +127,4 @@ client.connect()
   .catch((error)=>{
     console.log('The SQL server did not make it',error);
   });
+
